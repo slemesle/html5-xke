@@ -1,11 +1,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="fr">
+<html lang="fr" ng-app="project">
 <head>
     <title>HTML5 Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
     <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <script async="" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-resource.min.js"></script>
+    <script src="js/notes.js"></script>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true" style="position: relative;
 padding-top: 40px;">
@@ -42,6 +47,7 @@ padding-top: 40px;">
     </div>
     <!-- body -->
     <div class="span10">
+        <div ng-view></div>
         <ul class="nav nav-tabs nav-stacked">
             <li><a>My first note</a></li>
             <li><a>My second note</a></li>
@@ -51,7 +57,4 @@ padding-top: 40px;">
 </div>
 </div>
 </body>
-<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
-
 </html>

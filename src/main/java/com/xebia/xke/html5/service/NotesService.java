@@ -1,6 +1,7 @@
 package com.xebia.xke.html5.service;
 
 import javax.annotation.Nullable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,17 +18,36 @@ import com.xebia.xke.html5.model.Note;
 public class NotesService {
 
 
-    private final Map<String, Note> notes = new HashMap<String, Note> ();
+    private final Map<String, Note> notes;
+
+    public NotesService() {
+        notes = new HashMap<String, Note> ();
+        Note note = new Note();
+        note.content = "Mon contenu";
+        note.title = "My first note !";
+        note.creationDate = new Date();
+        note.userId = "slemesle";
+        save(note);
+        note = new Note();
+        note.content = "Mon contenu";
+        note.title = "My second note !";
+        note.creationDate = new Date();
+        note.userId = "slemesle";
+        save(note);
+    }
 
     public List<Note> getAllNotes(){
-        return Lists.newCopyOnWriteArrayList(notes.values());
+        return Lists.newArrayList(notes.values());
     }
     
     public Note save(Note note){
         if (note.id != null){
+            note.lastUpdate = new Date();
             notes.put(note.id, note);
         } else {
             note.id = UUID.randomUUID().toString();
+            note.creationDate = new Date();
+            note.lastUpdate = new Date();
             notes.put(note.id, note);
         }
         return note;
