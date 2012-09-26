@@ -1,4 +1,10 @@
-<ul class="nav nav-tabs nav-stacked">
-    <li>Add <a href="#/new"><i class="icon-plus-sign"></i></a></li>
-    <li ng-repeat="note in notes "><a>{{note.title}}</a> <a href="#/edit/{{note.id}}"><i class="icon-pencil"></i></a></li>
-</ul>
+<table class="note-list table-hover" width="100%">
+    <thead>
+    <th>Add <a href="#/new"><i class="icon-plus-sign"></i></a></th>
+    </thead>
+    <tbody>
+    <tr ng-repeat="note in notes ">
+    <td><a>{{note.title}}</a> <a href="#/edit/{{note.id}}"><i class="icon-pencil"></i></a></td>
+    </tr>
+    </tbody>
+</table>

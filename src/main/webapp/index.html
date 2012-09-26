@@ -11,6 +11,23 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-resource.min.js"></script>
     <script src="js/notes.js"></script>
+    <style type="text/css">
+        .note-list > tbody > tr > td,.note-list > thead > tr > td {
+            border: 1px solid #DDD;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            line-height: 20px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-bottom-right-radius: 4px;
+            -webkit-border-bottom-right-radius: 4px;
+            -webkit-border-bottom-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            border-radius: 4px;
+            padding-right: 12px;
+            padding-left: 12px;
+        }
+    </style>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true" style="position: relative;
 padding-top: 40px;">
@@ -27,8 +44,8 @@ padding-top: 40px;">
             </button>
             <a class="brand" href="./index.html">HTML5 Notes</a>
             <div class="nav-collapse collapse">
-                <form class="navbar-search pull-right">
-                    <input type="text" class="search-query" placeholder="Search">
+                <form name="search" class="navbar-search pull-right" ng-submit="submit()" ng-controller="SearchFormCtrl">
+                    <input type="text" class="search-query" placeholder="Search" ng-model="search" name="search">
                 </form>
             </div>
         </div>
@@ -42,16 +59,12 @@ padding-top: 40px;">
         <ul class="well nav nav-list affix">
             <li class="active"><a href="#all"><i class="icon-chevron-right"></i> All Notes </a></li>
             <li class="divider"></li>
-            <li class=""><a href="#gridSystem"><i class="icon-chevron-right"></i> Grid system</a></li>
         </ul>
     </div>
     <!-- body -->
     <div class="span10">
         <div ng-view></div>
-        <ul class="nav nav-tabs nav-stacked">
-            <li><a>My first note</a></li>
-            <li><a>My second note</a></li>
-        </ul>
+
     </div>
 
 </div>

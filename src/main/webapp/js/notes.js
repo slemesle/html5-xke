@@ -5,8 +5,9 @@ angular.module('project', ['notes']).
     config(function($routeProvider) {
         $routeProvider.
             when('/', {controller:ListCtrl, templateUrl:'view/list.html'}).
-            when('/edit/:noteId', {controller:EditCtrl, templateUrl:'detail.html'}).
-            when('/new', {controller:CreateCtrl, templateUrl:'detail.html'}).
+            when('/edit/:noteId', {controller:EditCtrl, templateUrl:'view/detail.html'}).
+            when('/new', {controller:CreateCtrl, templateUrl:'view/detail.html'}).
+            when('/search/:searchKey', {controller:SearchCtrl, templateUrl:'view/list.html'}).
             otherwise({redirectTo:'/'});
     });
 
@@ -15,11 +16,25 @@ function ListCtrl($scope, Note) {
     $scope.notes = Note.query();
 }
 
+function SearchFormCtrl($scope, $location) {
+    $scope.submit = function(){
+        $location.path('/search/'+this.search);
+    }
+}
+
+function SearchCtrl($scope, $location, $routeParams, Note) {
+
+     Note.search({searchKey: $routeParams.searchKey}, function(notes){
+         $scope.notes = notes;
+     });
+
+}
+
 
 function CreateCtrl($scope, $location, Note) {
     $scope.save = function() {
-        Project.save($scope.project, function(project) {
-            $location.path('/edit/' + project._id.$oid);
+        Note.save($scope.note, function(note) {
+            $location.path('/')
         });
     }
 }
@@ -60,14 +75,15 @@ angular.module('notes', ['ngResource']).
         );
 
         Note.prototype.update = function(cb) {
-            return Note.update({id: this._id.$oid},
-                angular.extend({}, this, {_id:undefined}), cb);
+            return Note.update({id: this.id},
+                angular.extend({}, this, {id:undefined}), cb);
         };
 
         Note.prototype.destroy = function(cb) {
-            return Note.remove({id: this._id.$oid}, cb);
+            return Note.remove({id: this.id}, cb);
         };
 
+        searchNote = $resource('/notes/search/:searchKey',{});
+        Note.search = searchNote.get.bind(searchNote);
         return Note;
     });
-

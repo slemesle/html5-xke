@@ -1,5 +1,6 @@
 package com.xebia.xke.html5.web;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.xebia.xke.html5.model.Note;
@@ -25,26 +26,37 @@ public class NoteController {
 
     @Autowired
     NotesService service;
-
-      @RequestMapping(  value = "/hello", method = RequestMethod.GET, produces = "text/plain")
-      public ResponseEntity<String> sayHello(){
-          ResponseEntity<String> responseEntity = new ResponseEntity<String>( "hello man !",HttpStatus.OK);
-          return responseEntity;
-      }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<Note> save(@PathVariable String id, @RequestBody Note note){
+        note.id = id;
         return new ResponseEntity<Note>(service.save(note), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Note> create(@RequestBody Note note){
+        return new ResponseEntity<Note>(service.save(note), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<Boolean> delete(@PathVariable String id){
+        return new ResponseEntity<Boolean>(service.delete(id), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Note> save(@PathVariable String id){
+    public ResponseEntity<Note> get(@PathVariable String id){
         return new ResponseEntity<Note>(service.getNote(id), HttpStatus.OK);
     }
 
     @RequestMapping( method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Note>> allNotes(){
         ResponseEntity responseEntity= new ResponseEntity<List<Note>>(service.getAllNotes(), HttpStatus.OK );
+        return responseEntity;
+    }
+
+    @RequestMapping( value= "/search/{searchKey}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Collection<Note>> search(@PathVariable String searchKey){
+        ResponseEntity responseEntity= new ResponseEntity<Collection<Note>>(service.findNote(searchKey), HttpStatus.OK );
         return responseEntity;
     }
 

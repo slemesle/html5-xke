@@ -1,0 +1,15 @@
+<form name="edit-note">
+    <legend>Edit note <small>{{note.lastUpdate|date:'MM/dd/yyyy @ HH:mm'}}</small></legend>
+    <input class="input-xxlarge" type="text" placeholder="Title" ng-model="note.title" required>
+    <span ng-show="edit-note.title.$error.required" class="help-inline">
+        Required</span>
+    <textarea rows="10" class="input-xxlarge" ng-model="note.content"></textarea>
+    <span ng-show="edit-note.title.$error.required" class="help-inline">
+        Required</span>
+    <br>
+    <a href="#/" class="btn">Cancel</a>
+    <button ng-click="save()" ng-disabled="isClean() || edit-note.$invalid"
+            class="btn btn-primary">Save</button>
+    <button ng-click="destroy()"
+            ng-show="note.id" class="btn btn-danger">Delete</button>
+</form>
