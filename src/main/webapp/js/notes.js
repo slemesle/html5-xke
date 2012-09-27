@@ -14,20 +14,20 @@ angular.module('project', ['notes']).
 
 function ListCtrl($scope, Note) {
     $scope.notes = Note.query();
+    $scope.search ="";
+
 }
 
 function SearchFormCtrl($scope, $location) {
+    $scope.search ="";
     $scope.submit = function(){
         $location.path('/search/'+this.search);
     }
 }
 
-function SearchCtrl($scope, $location, $routeParams, Note) {
-
-     Note.search({searchKey: $routeParams.searchKey}, function(notes){
-         $scope.notes = notes;
-     });
-
+function SearchCtrl($scope, $routeParams, Note) {
+    $scope.notes = Note.search({searchKey: $routeParams.searchKey});
+    $('search').blur();
 }
 
 
@@ -83,7 +83,9 @@ angular.module('notes', ['ngResource']).
             return Note.remove({id: this.id}, cb);
         };
 
-        searchNote = $resource('/notes/search/:searchKey',{});
+        searchNote = $resource('/notes/search/:searchKey',{},{
+            get: {method: 'GET', isArray:true}
+        });
         Note.search = searchNote.get.bind(searchNote);
         return Note;
     });
