@@ -89,3 +89,21 @@ angular.module('notes', ['ngResource']).
         Note.search = searchNote.get.bind(searchNote);
         return Note;
     });
+
+
+// Ping Worker setting
+var worker = new Worker('/js/ping.js');
+worker.addEventListener('error', function(e){
+    throw new Error(e.message + " (" + e.filename + ":" + e.lineno + ")");
+},false);
+worker.addEventListener('message', function(e) {
+    var result = jQuery.parseJSON(e.data);
+    if (result.online){
+        $('#offline-badge').removeClass('badge-error').addClass('badge-success').html('You\'re working online !');
+    }else {
+        $('#offline-badge').removeClass('badge-success').addClass('badge-important').html('You\'re working offline !');
+    }
+}, false);
+
+worker.postMessage('start'); // Start the worker
+
