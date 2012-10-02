@@ -1,7 +1,7 @@
 /**
  * module Angular de gestion des notes
  */
-angular.module('project', ['notes']).
+angular.module('project', ['notes', 'ping']).
     config(function($routeProvider) {
         $routeProvider.
             when('/', {controller:ListCtrl, templateUrl:'view/list.html'}).
@@ -12,26 +12,34 @@ angular.module('project', ['notes']).
     });
 
 
-function ListCtrl($scope, Note) {
+function ListCtrl($scope, $location, Note) {
     $scope.notes = Note.query();
     $scope.search ="";
+
+    // Respond to click event
+    $scope.click = function(index){
+        $location.path('/edit/'+index);
+    };
 
 }
 
 function SearchFormCtrl($scope, $location) {
-    $scope.search ="";
     $scope.submit = function(){
         $location.path('/search/'+this.search);
     }
 }
 
 function SearchCtrl($scope, $routeParams, Note) {
+    $scope.search ="";
+
     $scope.notes = Note.search({searchKey: $routeParams.searchKey});
     $('search').blur();
 }
 
 
 function CreateCtrl($scope, $location, Note) {
+    $scope.search ="";
+
     $scope.save = function() {
         Note.save($scope.note, function(note) {
             $location.path('/')
@@ -39,9 +47,22 @@ function CreateCtrl($scope, $location, Note) {
     }
 }
 
+function PingCtrl ($scope, $location, worker){
+
+   worker.onMessage(function(e){
+       $scope.ping = e.json;
+       if ($scope.ping.online){
+           $scope.ping.class = 'success';
+       } else {
+           $scope.ping.class = 'error';
+       }
+   });
+   worker.postMessage("start");
+}
 
 function EditCtrl($scope, $location, $routeParams, Note) {
     var self = this;
+    $scope.search ="";
 
     Note.get({id: $routeParams.noteId}, function(note) {
         self.original = note;
@@ -90,20 +111,39 @@ angular.module('notes', ['ngResource']).
         return Note;
     });
 
-
+angular.module('ping', []).factory('worker', function ($rootScope){
 // Ping Worker setting
-var worker = new Worker('/js/ping.js');
-worker.addEventListener('error', function(e){
-    throw new Error(e.message + " (" + e.filename + ":" + e.lineno + ")");
-},false);
-worker.addEventListener('message', function(e) {
-    var result = jQuery.parseJSON(e.data);
-    if (result.online){
-        $('#offline-badge').removeClass('badge-error').addClass('badge-success').html('You\'re working online !');
-    }else {
-        $('#offline-badge').removeClass('badge-success').addClass('badge-important').html('You\'re working offline !');
-    }
-}, false);
+    var worker = new Worker('/js/ping.js');
+    return {
+        error: function(callback){
+            worker.addEventListener('error', function(){
+                var args = arguments;
+                $rootScope.$apply(function(){
+                        callback.apply(worker, args);
+                });
+            },false);
+        },
+        onMessage: function (callback) {
+            worker.addEventListener('message', function() {
+                var args = arguments;
+                if (args.length == 1){
+                    args[0].json = jQuery.parseJSON(args[0].data);
+                }
+                $rootScope.$apply(function(){
+                    callback.apply(worker, args);
+                });
+            }, false);
+        },
+        postMessage: function (data) {
+            worker.postMessage(data);
+        }
+    };
 
-worker.postMessage('start'); // Start the worker
+});
+
+
+
+
+
+
 

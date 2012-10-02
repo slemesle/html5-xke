@@ -3,7 +3,7 @@
     <th>Add <a href="#/new"><i class="icon-plus-sign"></i></a></th>
     </thead>
     <tbody>
-    <tr ng-repeat="note in notes" ng-click="$location.path('/search/{{note.id}}')">
+    <tr ng-repeat="note in notes" ng-click="click(note.id)">
     <td><a href="#/edit/{{note.id}}">{{note.title}}</a> <a href="#/edit/{{note.id}}"><i class="icon-pencil"></i></a></td>
     </tr>
     </tbody>

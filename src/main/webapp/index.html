@@ -45,14 +45,15 @@ padding-top: 40px;">
             <a class="brand" href="./index.html">HTML5 Notes</a>
             <div class="nav-collapse collapse">
                 <form name="search" class="navbar-search pull-right" ng-submit="submit()" ng-controller="SearchFormCtrl">
-                    <input type="text" class="search-query" placeholder="Search" name="search" ng-model="search" ng-change="submit()">
+                    <input class="search-query" placeholder="Search" name="search" ng-model="search" ng-change="submit()">
                 </form>
             </div>
-            <span id="offline-badge" class="badge badge-error">You're working offline !</span>
         </div>
     </div>
 </div>
 <div class="container">
+
+    <div class="alert alert-{{ping.class}}" ng-controller="PingCtrl"><center><strong>You're working {{ping.status}} !</strong></center></div>
 
 <h1>This is HTML5 notes</h1>
 <div class="row">
