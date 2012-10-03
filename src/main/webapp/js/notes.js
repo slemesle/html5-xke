@@ -12,9 +12,9 @@ angular.module('project', ['notes', 'ping']).
     });
 
 
-function ListCtrl($scope, $location, Note) {
-    $scope.notes = Note.query();
-    $scope.search ="";
+function ListCtrl($rootScope, $scope, $location, Note, worker) {
+    $scope.notes = Note.query(function(){}, function(response, getResponseHeaders){
+    });
 
     // Respond to click event
     $scope.click = function(index){
@@ -24,25 +24,32 @@ function ListCtrl($scope, $location, Note) {
 }
 
 function SearchFormCtrl($scope, $location) {
-    $scope.submit = function(){
-        $location.path('/search/'+this.search);
-    }
+    $scope.searchNotes = function(search){
+        if (this.search.length>2){
+            $location.path('/search/'+this.search);
+        }
+    };
+    $scope.forceSearchNotes = function(search){
+            $location.path('/search/'+this.search);
+    };
 }
 
-function SearchCtrl($scope, $routeParams, Note) {
-    $scope.search ="";
+function SearchCtrl($scope, $routeParams, Note, worker) {
 
-    $scope.notes = Note.search({searchKey: $routeParams.searchKey});
+    $scope.notes = Note.search({searchKey: $routeParams.searchKey}, function(response, getResponseHeaders){
+        worker.postMessage("start");
+    });
     $('search').blur();
 }
 
 
-function CreateCtrl($scope, $location, Note) {
-    $scope.search ="";
+function CreateCtrl($scope, $location, Note, worker) {
 
     $scope.save = function() {
         Note.save($scope.note, function(note) {
             $location.path('/')
+        },function(response, getResponseHeaders){
+            worker.postMessage("start");
         });
     }
 }
@@ -67,6 +74,8 @@ function EditCtrl($scope, $location, $routeParams, Note) {
     Note.get({id: $routeParams.noteId}, function(note) {
         self.original = note;
         $scope.note = new Note(self.original);
+    }, function(response, getResponseHeaders){
+
     });
 
     $scope.isClean = function() {
@@ -76,12 +85,16 @@ function EditCtrl($scope, $location, $routeParams, Note) {
     $scope.destroy = function() {
         self.original.destroy(function() {
             $location.path('/list');
+        }, function(response, getResponseHeaders){
+            $location.path('/list');
         });
     };
 
     $scope.save = function() {
         $scope.note.update(function() {
             $location.path('/');
+        },function(response, getResponseHeaders){
+
         });
     };
 };

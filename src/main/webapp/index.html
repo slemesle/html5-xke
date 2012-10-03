@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="fr" ng-app="project">
+<html lang="fr" ng-app="project" manifest="manifest.mf">
 <head>
     <title>HTML5 Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,8 +44,8 @@ padding-top: 40px;">
             </button>
             <a class="brand" href="./index.html">HTML5 Notes</a>
             <div class="nav-collapse collapse">
-                <form name="search" class="navbar-search pull-right" ng-submit="submit()" ng-controller="SearchFormCtrl">
-                    <input class="search-query" placeholder="Search" name="search" ng-model="search" ng-change="submit()">
+                <form class="navbar-search pull-right" ng-submit="forceSearchNotes()" ng-controller="SearchFormCtrl">
+                    <input class="search-query" autocomplete="off" placeholder="Search" name="search" ng-model="search" ng-change="searchNotes()">
                 </form>
             </div>
         </div>

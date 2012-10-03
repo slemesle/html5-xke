@@ -3,6 +3,7 @@ package com.xebia.xke.html5.web;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Strings;
 import com.xebia.xke.html5.model.Note;
 import com.xebia.xke.html5.service.NotesService;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class NoteController {
 
     @RequestMapping( value= "/search/{searchKey}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Collection<Note>> search(@PathVariable String searchKey){
-        ResponseEntity responseEntity= new ResponseEntity<Collection<Note>>(service.findNote(searchKey), HttpStatus.OK );
+        ResponseEntity responseEntity= new ResponseEntity<Collection<Note>>(Strings.isNullOrEmpty(searchKey) ? service.getAllNotes(): service.findNote(searchKey), HttpStatus.OK );
         return responseEntity;
     }
 

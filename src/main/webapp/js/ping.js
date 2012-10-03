@@ -11,10 +11,14 @@ importScripts('/js/jquery.hive.pollen.js');
 
 var online = false;
 var interval = 30000;
+var timeout= undefined;
 
 self.addEventListener('message', function (event) {
 
     if(event.data == 'start'){
+        if (timeout != undefined){
+            clearTimeout(timeout);
+        }
         timeout = setTimeout(ping, 1);
     }else {
         clearTimeout(timeout);
