@@ -15,10 +15,7 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
-    <mime-mapping>
-        <extension>mf</extension>
-        <mime-type>text/cache-manifest</mime-type>
-    </mime-mapping>
+<!-- TODO : Add mime mapping text/manifest for .mf -->
     
     <welcome-file-list>
         <welcome-file>/index.html</welcome-file>

@@ -1,19 +1,9 @@
 CACHE MANIFEST
 # This is cache manifest file for HTML5 notes
 # Version 3 - 3/10/2012 00:00
-http://twitter.github.com/bootstrap/assets/css/bootstrap.css
-http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css
-http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js
-http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js
-http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js
-http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-resource.min.js
-http://twitter.github.com/bootstrap/assets/img/glyphicons-halflings-white.png
-http://twitter.github.com/bootstrap/assets/img/glyphicons-halflings.png
-/js/notes.js
-/js/ping.js
-/view/detail.html
-/view/list.html
-/js/jquery.hive.pollen.js
+// TODO List needed files
+
 NETWORK:
 *
+FALLBACK:
 

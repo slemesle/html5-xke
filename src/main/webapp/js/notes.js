@@ -1,7 +1,7 @@
 /**
  * module Angular de gestion des notes
  */
-angular.module('project', ['notes', 'ping']).
+var project = angular.module('project', ['notes', 'ping', 'online']).
     config(function($routeProvider) {
         $routeProvider.
             when('/', {controller:ListCtrl, templateUrl:'view/list.html'}).
@@ -54,20 +54,18 @@ function CreateCtrl($scope, $location, Note, worker) {
     }
 }
 
-function PingCtrl ($scope, $location, worker){
+function PingCtrl ($scope, $location, worker, onlineStatus){
 
+   // TODO onMessage from worker put new status in scope.ping data is in e.json
+   // Also add scope.ping.class to reflect error/success alert :).
    worker.onMessage(function(e){
-       $scope.ping = e.json;
-       if ($scope.ping.online){
-           $scope.ping.class = 'success';
-       } else {
-           $scope.ping.class = 'error';
-       }
+
    });
+
 
    $scope.ping = {'status': 'offline', 'online': false, class:'error'};
 
-   worker.postMessage("start");
+//   TODO start worker using postMessage
 }
 
 function EditCtrl($scope, $location, $routeParams, Note) {
@@ -157,9 +155,32 @@ angular.module('ping', []).factory('worker', function ($rootScope){
 
 });
 
+angular.module('online', []).factory('onlineStatus', ["$window", "$rootScope", function ($window, $rootScope) {
 
 
+    var onlineStatus = {
+        onOnline: function(callback){
+            window.addEventListener('online', function () {
+                var args = arguments;
+                $rootScope.$apply(function(){
+                    callback.apply(window, args);
+                }, true);
+            });
+        },
+        onOffline: function(callback){
+            window.addEventListener('offline', function() {
+                var args = arguments;
+                $rootScope.$apply(function(){
+                    callback.apply(window, args);
+                });
+            }, true);
+        }
+    };
+    return onlineStatus;
+}]);
 
+
+// This is solution branche
 
 
 

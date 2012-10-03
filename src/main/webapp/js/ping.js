@@ -1,12 +1,10 @@
 /**
- * Created with IntelliJ IDEA.
- * User: slm
- * Date: 30/09/12
- * Time: 22:36
- * To change this template use File | Settings | File Templates.
+ * Worker postMessage when line state changes :
+ * {'status': 'offline', 'online': false}
  */
 
 importScripts('/js/jquery.hive.pollen.js');
+
 
 
 var online = false;
@@ -16,12 +14,7 @@ var timeout= undefined;
 self.addEventListener('message', function (event) {
 
     if(event.data == 'start'){
-        if (timeout != undefined){
-            clearTimeout(timeout);
-        }
-        timeout = setTimeout(ping, 1);
-    }else {
-        clearTimeout(timeout);
+     // TODO Start Timeout
     }
 }, false);
 
@@ -29,24 +22,19 @@ function ping (){
     $.ajax.get({
         url: '/ping.html',
         success: function(result){
-            if (!online){
-                online = true;
-                self.postMessage( JSON.stringify({'status': 'online', 'online': true}));
-            }
-            resetTimeout(interval);
+           //TODO  Post online self.postMessage(...)
+           // Don't forget to stringify code
+           resetTimeout(interval);
         },
         error: function(result){
-            if (online){
-                online = false;
-                self.postMessage($.decode({'status': 'offline', 'online': false}));
-            }
+            // TODO post offline message
             resetTimeout(interval);
         }
     });
 }
 
 function resetTimeout(_interval){
-    timeout = setTimeout(ping, _interval);
+ //TODO Reset the timeout timeout = setTimeout(...)
 }
 
 
