@@ -159,7 +159,7 @@ angular.module('ping', []).factory('worker', function ($rootScope){
 
 
 
-
+// This is solution branche
 
 
 
