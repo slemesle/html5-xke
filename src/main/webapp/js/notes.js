@@ -64,6 +64,9 @@ function PingCtrl ($scope, $location, worker){
            $scope.ping.class = 'error';
        }
    });
+
+   $scope.ping = {'status': 'offline', 'online': false, class:'error'};
+
    worker.postMessage("start");
 }
 
