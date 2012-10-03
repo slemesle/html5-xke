@@ -1,7 +1,7 @@
 /**
  * module Angular de gestion des notes
  */
-angular.module('project', ['notes', 'ping']).
+var project = angular.module('project', ['notes', 'ping', 'online']).
     config(function($routeProvider) {
         $routeProvider.
             when('/', {controller:ListCtrl, templateUrl:'view/list.html'}).
@@ -54,7 +54,7 @@ function CreateCtrl($scope, $location, Note, worker) {
     }
 }
 
-function PingCtrl ($scope, $location, worker){
+function PingCtrl ($scope, $location, worker, onlineStatus){
 
    worker.onMessage(function(e){
        $scope.ping = e.json;
@@ -65,9 +65,16 @@ function PingCtrl ($scope, $location, worker){
        }
    });
 
+   onlineStatus.onOffline(function(evt){
+       $scope.ping = {'status': 'offline', 'online': false, class:'error'};
+   });
+   onlineStatus.onOnline(function(evt){
+        $scope.ping = {'status': 'online', 'online': true, class:'error'};
+   });
+
    $scope.ping = {'status': 'offline', 'online': false, class:'error'};
 
-   worker.postMessage("start");
+//   worker.postMessage("start");
 }
 
 function EditCtrl($scope, $location, $routeParams, Note) {
@@ -157,6 +164,29 @@ angular.module('ping', []).factory('worker', function ($rootScope){
 
 });
 
+angular.module('online', []).factory('onlineStatus', ["$window", "$rootScope", function ($window, $rootScope) {
+
+
+    var onlineStatus = {
+        onOnline: function(callback){
+            window.addEventListener('online', function () {
+                var args = arguments;
+                $rootScope.$apply(function(){
+                    callback.apply(window, args);
+                }, true);
+            });
+        },
+        onOffline: function(callback){
+            window.addEventListener('offline', function() {
+                var args = arguments;
+                $rootScope.$apply(function(){
+                    callback.apply(window, args);
+                });
+            }, true);
+        }
+    };
+    return onlineStatus;
+}]);
 
 
 // This is solution branche
