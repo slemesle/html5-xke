@@ -13,12 +13,15 @@ var project = angular.module('project', ['notes', 'ping', 'online', 'localStorag
 
 var online = false;
 function ListCtrl($rootScope, $scope, $location, Note, localStorage) {
-    $scope.notes = Note.query(function(){}, function(response, getResponseHeaders){
+    $scope.notes = Note.query(function(notes){
+        angular.forEach($scope.notes, function (note){
+            localStorage.put(note.id, note);
+        });
+    }, function(response, getResponseHeaders){
+        $scope.notes = localStorage.listAll();
     });
 
-    angular.forEach($scope.notes, function (note){
-        localStorage.put(note.id, note);
-    });
+
 
     // Respond to click event
     $scope.click = function(index){

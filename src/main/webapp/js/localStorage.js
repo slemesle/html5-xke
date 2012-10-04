@@ -25,7 +25,7 @@ angularLocalStorageModule.factory('localStorage', function() {
                 return false;
             }
 
-            localStorage[key] = value
+            localStorage[key] = jQuery.stringify(value);
         },
 
         get: function (key) {
@@ -34,13 +34,13 @@ angularLocalStorageModule.factory('localStorage', function() {
                 return false;
             }
 
-            return localStorage[key];
+            return jQuery.parseJSON(localStorage[key]);
         },
 
         listAll: function () {
             var result;
             for (var i in localStorage) {
-                result[i]=localStorage[i];
+                result[i]=jQuery.parseJSON(localStorage[i]);
             }
             return result;
         },
