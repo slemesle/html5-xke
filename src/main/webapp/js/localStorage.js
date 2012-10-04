@@ -7,7 +7,7 @@
  */
 var angularLocalStorageModule = angular.module('localStorage', []);
 
-angularLocalStorageModule.factory('localStorage', [function() {
+angularLocalStorageModule.factory('localStorage', function() {
 
     return {
 
@@ -36,6 +36,7 @@ angularLocalStorageModule.factory('localStorage', [function() {
 
             return localStorage[key];
         },
+
         listAll: function () {
             var result;
             for (var i in localStorage) {
@@ -52,7 +53,6 @@ angularLocalStorageModule.factory('localStorage', [function() {
             for (var i in localStorage) {
                 this.remove(i);
             }
-        },
-
+        }
     }
-}]);
+});

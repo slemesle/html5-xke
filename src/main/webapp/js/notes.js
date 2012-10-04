@@ -54,7 +54,7 @@ function CreateCtrl($scope, $location, Note, worker) {
     }
 }
 
-function PingCtrl ($scope, $location, worker, onlineStatus){
+function PingCtrl ($rootScope, $scope, $location, worker, onlineStatus){
 
    worker.onMessage(function(e){
        $scope.ping = e.json;
@@ -65,21 +65,28 @@ function PingCtrl ($scope, $location, worker, onlineStatus){
        }
    });
 
-   onlineStatus.onOffline(function(evt){
+    $rootScope.$on('onlineChanged', function(evt, online){
+        if (online){
+            $scope.ping = {'status': 'online', 'online': false, class:'success'};
+        } else {
+            $scope.ping = {'status': 'offline', 'online': false, class:'error'};
+        }
+    });
+/*   onlineStatus.onOffline(function(evt){
        $scope.ping = {'status': 'offline', 'online': false, class:'error'};
    });
    onlineStatus.onOnline(function(evt){
         $scope.ping = {'status': 'online', 'online': true, class:'error'};
    });
+*/
 
    $scope.ping = {'status': 'offline', 'online': false, class:'error'};
 
-//   worker.postMessage("start");
+   worker.postMessage("start");
 }
 
 function EditCtrl($scope, $location, $routeParams, Note) {
     var self = this;
-    $scope.search ="";
 
     Note.get({id: $routeParams.noteId}, function(note) {
         self.original = note;
@@ -164,29 +171,40 @@ angular.module('ping', []).factory('worker', function ($rootScope){
 
 });
 
-angular.module('online', []).factory('onlineStatus', ["$window", "$rootScope", function ($window, $rootScope) {
+project.run(function($rootScope, $window) {
+    $window.addEventListener("online", function () {
+        $rootScope.$broadcast('onlineChanged', true);
 
+    }, false);
+
+    $window.addEventListener("offline", function () {
+        $rootScope.$broadcast('onlineChanged', false);
+    }, false);
+});
+
+angular.module('online', []).factory('onlineStatus', function ($window, $rootScope) {
 
     var onlineStatus = {
         onOnline: function(callback){
-            window.addEventListener('online', function () {
+            $window.addEventListener('online', function () {
                 var args = arguments;
                 $rootScope.$apply(function(){
-                    callback.apply(window, args);
+                    callback.apply($window, args);
                 }, true);
             });
         },
+
         onOffline: function(callback){
-            window.addEventListener('offline', function() {
+            $window.addEventListener('offline', function() {
                 var args = arguments;
                 $rootScope.$apply(function(){
-                    callback.apply(window, args);
+                    callback.apply($window, args);
                 });
             }, true);
         }
     };
     return onlineStatus;
-}]);
+});
 
 
 // This is solution branche

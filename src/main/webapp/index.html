@@ -13,6 +13,52 @@
     <script src="./js/notes.js"></script>
     <script src="./js/localStorage.js"></script>
     <script src="./js/localDb.js"></script>
+    <script type="text/javascript">
+        var ws = null;
+        var target = 'ws://' + window.location.host + '/websocket';
+
+
+        function connect() {
+            if ('WebSocket' in window) {
+                ws = new WebSocket(target);
+            } else if ('MozWebSocket' in window) {
+                ws = new MozWebSocket(target);
+            } else {
+                alert('WebSocket is not supported by this browser.');
+                return;
+            }
+            ws.onopen = function () {
+                log('Info: WebSocket connection opened.');
+            };
+            ws.onmessage = function (event) {
+                log('Received: ' + event.data);
+            };
+            ws.onclose = function () {
+                log('Info: WebSocket connection closed.');
+            };
+        }
+
+        function disconnect() {
+            if (ws != null) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function log(message) {
+            var console = document.getElementById('console');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(message));
+            console.appendChild(p);
+            while (console.childNodes.length > 25) {
+                console.removeChild(console.firstChild);
+            }
+            console.scrollTop = console.scrollHeight;
+        }
+    </script>
+
+
     <style type="text/css">
         .note-list > tbody > tr > td,.note-list > thead > tr > td {
             border: 1px solid #DDD;
@@ -69,9 +115,11 @@ padding-top: 40px;">
     <!-- body -->
     <div class="span10">
         <div ng-view></div>
-
     </div>
 
+    <div id="console-container">
+        <div id="console"></div>
+    </div>
 </div>
 </div>
 </body>
