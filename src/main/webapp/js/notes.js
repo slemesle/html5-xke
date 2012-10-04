@@ -11,9 +11,13 @@ var project = angular.module('project', ['notes', 'ping', 'online', 'localStorag
             otherwise({redirectTo:'/'});
     });
 
-
-function ListCtrl($rootScope, $scope, $location, Note, worker) {
+var online = false;
+function ListCtrl($rootScope, $scope, $location, Note, localStorage) {
     $scope.notes = Note.query(function(){}, function(response, getResponseHeaders){
+    });
+
+    angular.forEach($scope.notes, function (note){
+        localStorage.put(note.id, note);
     });
 
     // Respond to click event
@@ -60,18 +64,20 @@ function PingCtrl ($rootScope, $scope, $location, worker, onlineStatus){
        $scope.ping = e.json;
        if ($scope.ping.online){
            $scope.ping.class = 'success';
+           online = true;
        } else {
            $scope.ping.class = 'error';
+           online = false;
        }
    });
-
+/*
     $rootScope.$on('onlineChanged', function(evt, online){
         if (online){
             $scope.ping = {'status': 'online', 'online': false, class:'success'};
         } else {
             $scope.ping = {'status': 'offline', 'online': false, class:'error'};
         }
-    });
+    }); */
 /*   onlineStatus.onOffline(function(evt){
        $scope.ping = {'status': 'offline', 'online': false, class:'error'};
    });
