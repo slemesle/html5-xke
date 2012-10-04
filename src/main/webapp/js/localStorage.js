@@ -5,9 +5,9 @@
  * Time: 00:43
  * To change this template use File | Settings | File Templates.
  */
-var angularLocalStorageModule = angular.module('localStorageModule', []);
+var angularLocalStorageModule = angular.module('localStorage', []);
 
-angularLocalStorageModule.factory('localStorageService', [function() {
+angularLocalStorageModule.factory('localStorage', [function() {
 
     return {
 

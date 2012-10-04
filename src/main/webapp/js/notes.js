@@ -1,7 +1,7 @@
 /**
  * module Angular de gestion des notes
  */
-var project = angular.module('project', ['notes', 'ping', 'online']).
+var project = angular.module('project', ['notes', 'ping', 'online', 'localStorage', 'localDb']).
     config(function($routeProvider) {
         $routeProvider.
             when('/', {controller:ListCtrl, templateUrl:'view/list.html'}).
