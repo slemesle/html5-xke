@@ -14,6 +14,10 @@ http://twitter.github.com/bootstrap/assets/img/glyphicons-halflings.png
 /view/detail.html
 /view/list.html
 /js/jquery.hive.pollen.js
+/nologin.html
+
 NETWORK:
 *
 
+FALLBACK:
+/login /nologin.html

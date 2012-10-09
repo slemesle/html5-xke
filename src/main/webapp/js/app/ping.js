@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-importScripts('/js/jquery.hive.pollen.js');
+importScripts('../lib/jquery.hive.pollen.js');
 
 
 var online = false;
