@@ -73,6 +73,7 @@ define(['app/localDb', 'app/localStorage'],
 
         function PingCtrl ($rootScope, $scope, $location, worker, onlineStatus){
 
+           // Called by ping worker
            worker.onMessage(function(e){
                $scope.ping = e.json;
                if ($scope.ping.online){
@@ -83,25 +84,21 @@ define(['app/localDb', 'app/localStorage'],
                    online = false;
                }
            });
-        /*
-            $rootScope.$on('onlineChanged', function(evt, online){
-                if (online){
-                    $scope.ping = {'status': 'online', 'online': false, class:'success'};
-                } else {
-                    $scope.ping = {'status': 'offline', 'online': false, class:'error'};
-                }
-            }); */
 
-            onlineStatus.onOffline(function(evt){
+            // Called by browser
+           onlineStatus.onOffline(function(evt){
                $scope.ping = {'status': 'offline', 'online': false, class:'error'};
            });
+
+           // Called by browser
            onlineStatus.onOnline(function(evt){
                 $scope.ping = {'status': 'online', 'online': true, class:'success'};
            });
 
-
+            // By default considers offline
            $scope.ping = {'status': 'offline', 'online': false, class:'error'};
 
+           // Starts the ping worker by sending a 'start' event to it ...
            worker.postMessage("start");
         }
 
@@ -191,44 +188,31 @@ define(['app/localDb', 'app/localStorage'],
 
         });
 
-        /*
-        project.run(function($rootScope, $window) {
-            $window.addEventListener("online", function () {
-                $rootScope.$broadcast('onlineChanged', true);
+        angular.module('online', []).factory('onlineStatus', function ($window, $rootScope) {
 
-            }, false);
+            var onlineStatus = {
+                onOnline: function(callback){
+                    window.addEventListener('online', function () {
+                        var args = arguments;
+                        console.log('online...');
+                        $rootScope.$apply(function(){
+                            callback(args);
+                        }, false);
+                    });
+                },
 
-            $window.addEventListener("offline", function () {
-                $rootScope.$broadcast('onlineChanged', false);
-            }, false);
+                onOffline: function(callback){
+                    window.addEventListener('offline', function() {
+                        var args = arguments;
+                        console.log('offline...');
+                        $rootScope.$apply(function(){
+                            callback(args);
+                        });
+                    }, false);
+                }
+            };
+            return onlineStatus;
         });
-        */
-
-                angular.module('online', []).factory('onlineStatus', function ($window, $rootScope) {
-
-                    var onlineStatus = {
-                        onOnline: function(callback){
-                            window.addEventListener('online', function () {
-                                var args = arguments;
-                                console.log('online...');
-                                $rootScope.$apply(function(){
-                                    callback(args);
-                                }, false);
-                            });
-                        },
-
-                        onOffline: function(callback){
-                            window.addEventListener('offline', function() {
-                                var args = arguments;
-                                console.log('offline...');
-                                $rootScope.$apply(function(){
-                                    callback(args);
-                                });
-                            }, false);
-                        }
-                    };
-                    return onlineStatus;
-                });
         return project;
     });
 // This is solution branche
